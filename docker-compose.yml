@@ -1,0 +1,13 @@
+version: "3.5"
+
+services:
+  gve_devnet_ise_device_rw_access_using_jira:
+    image: ghcr.io/gve-sw/gve_devnet_ise_device_rw_access_using_jira:latest
+#    build: .
+    container_name: gve_devnet_ise_device_rw_access_using_jira
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src/logger/logs:/app/logger/logs
+      - .env:/app/.env
+    restart: "always"

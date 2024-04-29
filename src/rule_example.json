@@ -1,0 +1,44 @@
+{
+  "condition": {
+    "link": null,
+    "conditionType": "ConditionAndBlock",
+    "isNegate": false,
+    "children": [
+      {
+        "link": null,
+        "conditionType": "ConditionAttributes",
+        "isNegate": false,
+        "dictionaryName": "LLDAP",
+        "attributeName": "givenname",
+        "operator": "equals",
+        "dictionaryValue": null,
+        "attributeValue": "{{ first_name }}"
+      },
+      {
+        "link": null,
+        "conditionType": "ConditionAttributes",
+        "isNegate": false,
+        "dictionaryName": "LLDAP",
+        "attributeName": "sn",
+        "operator": "equals",
+        "dictionaryValue": null,
+        "attributeValue": "{{ last_name }}"
+      },
+      {
+        "link": null,
+        "conditionType": "ConditionAttributes",
+        "isNegate": false,
+        "dictionaryName": "Network Access",
+        "attributeName": "Device IP Address",
+        "operator": "ipEquals",
+        "dictionaryValue": null,
+        "attributeValue": "{{ ip_address }}"
+      }
+    ]
+  },
+  "default": false,
+  "name": "{{ policy_name }}",
+  "rank": 0,
+  "state": "enabled"
+}
+
