@@ -74,13 +74,17 @@ def validate_webhook_data(data: CreationWebhookData | BaseWebhookData):
     :param data: Webhook data to validate
     """
     # Validate IP Address (both models have it) - check if ip valid, and ip is an actual network device in ISE
-    ip_address = data.ip_address
-    if not is_valid_ip(ip_address):
-        raise ValueError(f"Invalid IP address received: {ip_address}")
+    ip_addresses = data.ip_address.split(",")
 
-    devices = ise.find_network_devices(f"ipaddress.EQ.{ip_address}")
-    if not devices:
-        raise ValueError(f"ISE Network Device not Found for the following IP: {ip_address}. Please check IP Address.")
+    for ip in ip_addresses:
+        ip_address = ip.strip()
+
+        if not is_valid_ip(ip_address):
+            raise ValueError(f"Invalid IP address received: {ip_address}")
+
+        devices = ise.find_network_devices(f"ipaddress.EQ.{ip_address}")
+        if not devices:
+            raise ValueError(f"ISE Network Device not Found for the following IP: {ip_address}. Please check IP Address.")
 
     if isinstance(data, CreationWebhookData):
         # Check start_time is after current time if scheduling enabled
@@ -115,11 +119,15 @@ def create_authorization_rule(data: CreationWebhookData) -> dict:
     # Build data structure to inject into Jinja Rule template (field names must match those referenced in rule.json)
     username = data.assignee.split(' ')
 
+    # Handle Multiple IPs
+    ip_addresses = data.ip_address.split(",")
+    ip_addresses = [ip.strip() for ip in ip_addresses]
+
     rule_data = {
         'first_name': username[0],
         'last_name': username[1],
-        "ip_address": data.ip_address,
-        "policy_name": f"{data.assignee}_rw_override-{data.ip_address}"
+        "ip_addresses": ip_addresses,
+        "policy_name": f"{data.assignee}_rw_override-{"-".join(ip_addresses)}"
     }
 
     # Check if active rule already exists
@@ -165,8 +173,12 @@ def delete_authorization_rule(data: BaseWebhookData) -> dict | None:
     :param data: Incoming Webhook Data
     :return: Response from ISE API Deletion
     """
+    # Handle Multiple IPs
+    ip_addresses = data.ip_address.split(",")
+    ip_addresses = [ip.strip() for ip in ip_addresses]
+
     # Reconstruct policy name (based on creation)
-    policy_name = f"{data.assignee}_rw_override-{data.ip_address}"
+    policy_name = f"{data.assignee}_rw_override-{"-".join(ip_addresses)}"
 
     # Delete Authorization Rule
     return ise.delete_authorization_rule(policy_name)

@@ -5,8 +5,6 @@ venv
 .env
 src/config/settings.py
 
-src/rule.json
-
 # IDE files
 .idea
 __pycache__

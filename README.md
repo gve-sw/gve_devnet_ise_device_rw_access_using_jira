@@ -4,7 +4,9 @@ This application programmatically creates/deletes a `Device Authorization Policy
 
 The working example matches a device on `IP Address` and users on `First Name`, `Last Name` fields in a generic LDAP Database when creating a new rule. Users are under a `Read-Only` policy by default with restricted commands on all devices, but users will be granted `Write Access` via Jira Issues for a (optional) specified period of time.
 
-**Note**: The application assumes a Device Policy, Command Set, and Shell Profile used with the rule exist within ISE. For more information on ISE TACACS+ and these components, refer to the [ISE Documentation](https://www.cisco.com/c/en/us/td/docs/security/ise/2-4/admin_guide/b_ISE_admin_guide_24/m_ise_tacacs_device_admin.html).
+**Note**: 
+* The application assumes a Device Policy, Command Set, and Shell Profile used with the rule exist within ISE. For more information on ISE TACACS+ and these components, refer to the [ISE Documentation](https://www.cisco.com/c/en/us/td/docs/security/ise/2-4/admin_guide/b_ISE_admin_guide_24/m_ise_tacacs_device_admin.html). 
+* Multiple IPs can be specified to match multiple devices in a single rule by providing a comma seperated list in the Jira Issue: "X.X.X.X,Y.Y.Y.Y"
 
 **Warning**: This application only works with ISE 3.X or later (using the OpenAPI Policy API)
 
@@ -136,9 +138,8 @@ COMMAND_SET_NAMES = ["Full RW Commands"]
 SCHEDULE_START = False
 SCHEDULE_END = False
 ```
-5. Rename `src/rule_example.json` to `src/rule.json`. This JSON file represents the matching condition template the Authorization Rules will use (minus field values injected from the Jira Tickets).
-6. Set up a Python virtual environment. Make sure Python 3 is installed in your environment, and if not, you may download Python [here](https://www.python.org/downloads/). Once Python 3 is installed in your environment, you can activate the virtual environment with the instructions found [here](https://docs.python.org/3/tutorial/venv.html).
-7. Install the requirements with `pip install -r requirements.txt`
+5. Set up a Python virtual environment. Make sure Python 3 is installed in your environment, and if not, you may download Python [here](https://www.python.org/downloads/). Once Python 3 is installed in your environment, you can activate the virtual environment with the instructions found [here](https://docs.python.org/3/tutorial/venv.html).
+6. Install the requirements with `pip install -r requirements.txt`
 
 ## Usage
 

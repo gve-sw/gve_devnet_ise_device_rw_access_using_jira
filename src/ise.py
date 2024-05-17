@@ -30,6 +30,7 @@ from urllib3.util.retry import Retry
 
 from config.config import c
 from logger.logrr import lm
+from rule import json_rule
 
 # Suppress only the single InsecureRequestWarning from urllib3 needed for unverified HTTPS requests.
 urllib3.disable_warnings(InsecureRequestWarning)
@@ -57,13 +58,8 @@ class IseTacacs:
         self._matching_command_set = None
         self._active_auth_rules = None
 
-        # Load in Raw Authorization Rule JSON
-        with open(self.RULE_JSON_PATH, 'r') as f:
-            json_data = json.load(f)
-
-            # Turn raw JSON into Jinja template
-            json_template = json.dumps(json_data)
-            self._rule_template = jinja2.Template(json_template)
+        # Load in Raw Authorization Rule JSON, convert to template
+        self._rule_template = jinja2.Template(json_rule)
 
         # Setup Session (handle 429 with custom backoff)
         session = requests.Session()
